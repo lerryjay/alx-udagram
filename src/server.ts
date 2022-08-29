@@ -9,11 +9,13 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
   }
   // Init the Express application
   const app = express();
-
   // Set the network port
   const port = process.env.PORT || 8082;
 
   // Use the body parser middleware for post requests
+  app.use(bodyParser.json());
+
+
   app.use(bodyParser.json());
 
   // @TODO1 IMPLEMENT A RESTFUL ENDPOINT
@@ -34,7 +36,24 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
   //! END @TODO1
 
+  // Root Endpoint
+  // Displays a simple message to the user
+  app.get("/", async (req, res) => {
+    res.send("try GET /filteredimage?image_url={{}}")
+  });
 
+  app.get("/healthcheck", async (req, res) => {
+    const healthcheck: { running: number, message: any, timestamp: number } = {
+      message: 'OK',
+      running: process.uptime(),
+      timestamp: Date.now()
+    };
+    try {
+      res.send(healthcheck);
+    } catch (error) {
+      res.status(500).send("Internal server error");
+    }
+  })
   const authMiddleware = (req: any, res: any, next: any) => {
     const base64Data = (req.headers.authorization || '').split(' ')[1] || ''
     const [user, password] = Buffer.from(base64Data, 'base64').toString().split(':')
@@ -49,11 +68,6 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
   app.use(authMiddleware);
 
-  // Root Endpoint
-  // Displays a simple message to the user
-  app.get("/", async (req, res) => {
-    res.send("try GET /filteredimage?image_url={{}}")
-  });
 
   app.get("/filteredimage", async (req, res) => {
     const image_url = req.query.image_url;
@@ -72,18 +86,7 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
     }
   });
 
-  app.get("/healthcheck", async (req, res) => {
-    const healthcheck: { running: number, message: any, timestamp: number } = {
-      message: 'OK',
-      running: process.uptime(),
-      timestamp: Date.now()
-    };
-    try {
-      res.send(healthcheck);
-    } catch (error) {
-      res.status(500).send("Internal server error");
-    }
-  })
+
 
   // Start the Server
   app.listen(port, () => {
