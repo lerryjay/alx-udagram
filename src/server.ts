@@ -3,7 +3,10 @@ import bodyParser from 'body-parser';
 import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
 (async () => {
-
+  const credentials = {
+    user: "udagram_user",
+    password: "P@sSw07d!@#"
+  }
   // Init the Express application
   const app = express();
 
@@ -31,6 +34,21 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
   //! END @TODO1
 
+
+  const authMiddleware = (req: any, res: any, next: any) => {
+    const base64Data = (req.headers.authorization || '').split(' ')[1] || ''
+    const [user, password] = Buffer.from(base64Data, 'base64').toString().split(':')
+
+    // Verify login credentials
+    if (user && password && user === credentials.user && password === credentials.password) {
+      return next()
+    }
+    res.set('WWW-Authenticate', 'Basic realm="401"')
+    res.status(401).send('Unathorized.')
+  }
+
+  app.use(authMiddleware);
+
   // Root Endpoint
   // Displays a simple message to the user
   app.get("/", async (req, res) => {
@@ -52,9 +70,20 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
       console.log(error)
       res.status(500).send('Internal server error'); // Internal server error upon unexpected failures
     }
-
   });
 
+  app.get("/healthcheck", async (req, res) => {
+    const healthcheck: { running: number, message: any, timestamp: number } = {
+      message: 'OK',
+      running: process.uptime(),
+      timestamp: Date.now()
+    };
+    try {
+      res.send(healthcheck);
+    } catch (error) {
+      res.status(500).send("Internal server error");
+    }
+  })
 
   // Start the Server
   app.listen(port, () => {
