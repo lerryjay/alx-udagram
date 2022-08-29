@@ -37,9 +37,9 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
   app.get("/filteredimage", async (req, res) => {
     const { image_url } = req.query;
+    if (!image_url) return res.send('Please provide image url').status(400); // throw 400 if image url is not passed
     const filteredpath = await filterImageFromURL(image_url);
-
-
+    if (!filteredpath) return res.send('File not found').status(404); // Return 404 if file is not found
 
     res.sendFile(filteredpath, async (err) => {
       if (err) throw err; // Throw error if file is not sent for one reason or another!
