@@ -39,14 +39,20 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
   app.get("/filteredimage", async (req, res) => {
     const image_url = req.query.image_url;
-    if (!image_url) return res.send('Please provide image url').status(400);
+    try {
+      if (!image_url) return res.send('Please provide image url').status(400); // throw 400 if image url is not passed
+      const filteredpath = await filterImageFromURL(image_url);
+      if (!filteredpath) return res.send('File not found').status(404); // Return 404 if file is not found
 
+      res.sendFile(filteredpath, (err) => {
+        if (err) throw err; // Failed due to some things
+        else deleteLocalFiles([filteredpath]); // Delete after response sent
+      });
+    } catch (error) {
+      console.log(error)
+      res.status(500).send('Internal server error'); // Internal server error upon unexpected failures
+    }
 
-    const filteredpath = await filterImageFromURL(image_url);
-    if (!filteredpath) return res.send('File not found').status(404);
-
-    res.send(filteredpath);
-    await deleteLocalFiles([filteredpath]);
   });
 
 
