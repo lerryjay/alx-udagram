@@ -1,0 +1,76 @@
+{
+	"info": {
+		"_postman_id": "015a4d4c-5a9b-4e3e-beda-06bdf73a9337",
+		"name": "cloud-cdnd-c2-final",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6605413"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8082/filteredimage?image_url=https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "P@sSw07d!@#",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "jireh",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{HOST}}/filteredimage?image_url=https://assets.goal.com/v3/assets/bltcc7a7ffd2fbf71f5/blt1ffe60923a6155d5/60db05db20a5380ed1a08341/6f6ee8138108c0605896ac8c9f1d03c18e7c5d6e.jpg?quality=80%26format=pjpg%26auto=webp%26width=1000",
+					"protocol": "http",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"filteredimage"
+					],
+					"query": [
+						{
+							"key": "image_url",
+							"value": "https://assets.goal.com/v3/assets/bltcc7a7ffd2fbf71f5/blt1ffe60923a6155d5/60db05db20a5380ed1a08341/6f6ee8138108c0605896ac8c9f1d03c18e7c5d6e.jpg?quality=80&format=pjpg&auto=webp&width=1000"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "HOST",
+			"value": "localhost:8082",
+			"type": "string"
+		}
+	]
+}
