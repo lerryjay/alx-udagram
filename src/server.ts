@@ -3,10 +3,10 @@ import bodyParser from 'body-parser';
 import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
 (async () => {
-  const credentials = {
-    user: "udagram_user",
-    password: "P@sSw07d!@#"
-  }
+  // const credentials = {
+  //   user: "udagram_user",
+  //   password: "P@sSw07d!@#"
+  // }
   // Init the Express application
   const app = express();
   // Set the network port
@@ -54,19 +54,21 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
       res.status(500).send("Internal server error");
     }
   })
-  const authMiddleware = (req: any, res: any, next: any) => {
-    const base64Data = (req.headers.authorization || '').split(' ')[1] || ''
-    const [user, password] = Buffer.from(base64Data, 'base64').toString().split(':')
 
-    // Verify login credentials
-    if (user && password && user === credentials.user && password === credentials.password) {
-      return next()
-    }
-    res.set('WWW-Authenticate', 'Basic realm="401"')
-    res.status(401).send('Unathorized.')
-  }
+  //Removed Auth middles ware
+  // const authMiddleware = (req: any, res: any, next: any) => {
+  //   const base64Data = (req.headers.authorization || '').split(' ')[1] || ''
+  //   const [user, password] = Buffer.from(base64Data, 'base64').toString().split(':')
 
-  app.use(authMiddleware);
+  //   // Verify login credentials
+  //   if (user && password && user === credentials.user && password === credentials.password) {
+  //     return next()
+  //   }
+  //   res.set('WWW-Authenticate', 'Basic realm="401"')
+  //   res.status(401).send('Unathorized.')
+  // }
+
+  // app.use(authMiddleware);
 
 
   app.get("/filteredimage", async (req, res) => {
