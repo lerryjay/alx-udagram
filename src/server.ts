@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import { filterImageFromURL, deleteLocalFiles } from './util/util';
 
@@ -54,7 +54,7 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
       res.status(500).send("Internal server error");
     }
   })
-  const authMiddleware = (req: any, res: any, next: any) => {
+  const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const base64Data = (req.headers.authorization || '').split(' ')[1] || ''
     const [user, password] = Buffer.from(base64Data, 'base64').toString().split(':')
 
@@ -69,18 +69,18 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
   app.use(authMiddleware);
 
 
-  app.get("/filteredimage", async (req, res) => {
-    const image_url = req.query.image_url;
+  app.get("/filteredimage", async (req:Request, res:Response) => {
+    const image_url:string = req.query.image_url;
     try {
       if (!image_url) return res.send('Please provide image url').status(400); // throw 400 if image url is not passed
       const filteredpath = await filterImageFromURL(image_url);
       if (!filteredpath) return res.send('File not found').status(404); // Return 404 if file is not found
 
-      res.sendFile(filteredpath, (err) => {
+      res.sendFile(filteredpath, (err:any) => {
         if (err) throw err; // Failed due to some things
         else deleteLocalFiles([filteredpath]); // Delete after response sent
       });
-    } catch (error) {
+    } catch ( error) {
       console.log(error)
       res.status(500).send('Internal server error'); // Internal server error upon unexpected failures
     }
