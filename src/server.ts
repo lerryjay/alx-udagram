@@ -54,19 +54,19 @@ import { filterImageFromURL, deleteLocalFiles } from './util/util';
       res.status(500).send("Internal server error");
     }
   })
-  const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const base64Data = (req.headers.authorization || '').split(' ')[1] || ''
-    const [user, password] = Buffer.from(base64Data, 'base64').toString().split(':')
+  // const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  //   const base64Data = (req.headers.authorization || '').split(' ')[1] || ''
+  //   const [user, password] = Buffer.from(base64Data, 'base64').toString().split(':')
 
-    // Verify login credentials
-    if (user && password && user === credentials.user && password === credentials.password) {
-      return next()
-    }
-    res.set('WWW-Authenticate', 'Basic realm="401"')
-    res.status(401).send('Unathorized.')
-  }
+  //   // Verify login credentials
+  //   if (user && password && user === credentials.user && password === credentials.password) {
+  //     return next()
+  //   }
+  //   res.set('WWW-Authenticate', 'Basic realm="401"')
+  //   res.status(401).send('Unathorized.')
+  // }
 
-  app.use(authMiddleware);
+  // app.use(authMiddleware);
 
 
   app.get("/filteredimage", async (req:Request, res:Response) => {
